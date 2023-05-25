@@ -25,6 +25,12 @@ app.use(authRoutes);
 app.use('/api/v1', v1Routes);
 app.use('/api/v2', v2Routes);
 
+//proof of life
+
+app.get('/', (req, res, next) => {
+  res.status(200).send('servers up');
+});
+
 
 //catchalls
 app.use('*', notFoundHandler);
