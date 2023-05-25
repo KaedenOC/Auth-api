@@ -13,12 +13,12 @@ const userModel = (sequelize, DataTypes) => {
     token: {
       type: DataTypes.VIRTUAL,
       get() {
-        return jwt.sign({ username: this.username }, SECRET);
+        return jwt.sign({ username: this.username, capabilities: this.capabilities }, SECRET);
       },
       set(tokenObj) {
         let token = jwt.sign(tokenObj, SECRET);
         return token;
-      }
+      },
     },
     capabilities: {
       type: DataTypes.VIRTUAL,
@@ -27,11 +27,11 @@ const userModel = (sequelize, DataTypes) => {
           user: ['read'],
           writer: ['read', 'create'],
           editor: ['read', 'create', 'update'],
-          admin: ['read', 'create', 'update', 'delete']
+          admin: ['read', 'create', 'update', 'delete'],
         };
         return acl[this.role];
-      }
-    }
+      },
+    },
   });
 
   model.beforeCreate(async (user) => {
@@ -51,13 +51,13 @@ const userModel = (sequelize, DataTypes) => {
       const parsedToken = jwt.verify(token, SECRET);
       const user = this.findOne({where: { username: parsedToken.username } });
       if (user) { return user; }
-      throw new Error("User Not Found");
+      throw new Error('User Not Found');
     } catch (e) {
-      throw new Error(e.message)
+      throw new Error(e.message);
     }
   };
 
   return model;
-}
+};
 
 module.exports = userModel;
