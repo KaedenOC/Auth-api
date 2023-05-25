@@ -6,7 +6,7 @@ const supertest = require('supertest');
 
 const request = supertest(app);
 
-let TOKEN;
+// let TOKEN;
 
 beforeAll(async () => {
   await db.sync();
